@@ -1,12 +1,452 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Entertainment Service</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomad Cosmic | Agentic Entertainment</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --secondary: #ff477e;
+            --accent: #00f0ff;
+            --bg-dark: #09090e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* Abstract glowing background */
+        .ambient-light {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            opacity: 0.5;
+            animation: float 10s infinite alternate;
+        }
+        .light-1 {
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: rgba(138, 43, 226, 0.4);
+        }
+        .light-2 {
+            bottom: -20%; right: -10%;
+            width: 600px; height: 600px;
+            background: rgba(255, 71, 126, 0.3);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(50px) scale(1.1); }
+        }
+
+        /* Sidebar Glassmorphism */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: rgba(15, 15, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--card-border);
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            transform: translateX(5px);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 3rem 4rem;
+            position: relative;
+            z-index: 10;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        textarea, select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            resize: none;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Magical Button */
+        .btn-generate {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 71, 126, 0.3);
+        }
+
+        .btn-generate::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .btn-generate:hover::after {
+            opacity: 1;
+            left: 100%;
+        }
+
+        /* Output Panel */
+        .output-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .output-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            opacity: 0.5;
+            transform: translateY(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .output-card.active {
+            opacity: 1;
+            transform: translateY(0);
+            border-color: rgba(138, 43, 226, 0.3);
+        }
+
+        .output-card h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .output-content {
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Fake Data for Demo */
+        .skeleton-text {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+            height: 1em;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Lights -->
+    <div class="ambient-light light-1"></div>
+    <div class="ambient-light light-2"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo">✦ Nomad Cosmic</div>
+        <div class="nav-item active">✨ AI Studio</div>
+        <div class="nav-item">🎬 Script Generator</div>
+        <div class="nav-item">🎥 Visual Storyboard</div>
+        <div class="nav-item" style="margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 1.5rem; border-radius: 0;">⚙️ Project Settings</div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <h1>Agentic Entertainment Planner</h1>
+            <p>Design your next masterpiece. Enter a seed idea, and let our multi-agent AI pipeline construct the narrative, pitch, and screenplay.</p>
+        </header>
+
+        <div class="workspace">
+            
+            <!-- Left Side: Controls -->
+            <div class="glass-panel">
+                <div class="input-group">
+                    <label>Seed Concept / Idea</label>
+                    <textarea id="ideaInput" rows="4" placeholder="A rogue AI discovers jazz music and starts an underground club on Mars..."></textarea>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label>Genre</label>
+                        <select>
+                            <option>Sci-Fi Noir</option>
+                            <option>Psychological Thriller</option>
+                            <option>Cyberpunk</option>
+                            <option>Dark Comedy</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Tone</label>
+                        <select>
+                            <option>Atmospheric & Tense</option>
+                            <option>Fast-paced Action</option>
+                            <option>Emotional Drama</option>
+                            <option>Satirical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Agentic Pipeline Target</label>
+                    <select>
+                        <option>Full Pipeline (Concept -> Script)</option>
+                        <option>World Building Only</option>
+                        <option>Character Profiles</option>
+                    </select>
+                </div>
+
+                <button class="btn-generate" id="generateBtn">
+                    <span id="btnText">GENERATE MASTERPIECE</span>
+                    <div class="loader" id="btnLoader"></div>
+                </button>
+            </div>
+
+            <!-- Right Side: Outputs -->
+            <div class="output-panel">
+                
+                <div class="output-card" id="card1">
+                    <h3>1. Core Logline (Planner Agent)</h3>
+                    <div class="output-content" id="content1">
+                        Awaiting input telemetry...
+                    </div>
+                </div>
+
+                <div class="output-card" id="card2">
+                    <h3>2. Executive Pitch (Writer Agent)</h3>
+                    <div class="output-content" id="content2">
+                        System standing by...
+                    </div>
+                </div>
+
+                <div class="output-card" id="card3">
+                    <h3>3. Scene 1 Script (Director Agent)</h3>
+                    <div class="output-content" id="content3">
+                        Pipeline paused...
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript for Interactive Demo -->
+    <script>
+        const btn = document.getElementById('generateBtn');
+        const btnText = document.getElementById('btnText');
+        const loader = document.getElementById('btnLoader');
+        
+        const card1 = document.getElementById('card1');
+        const card2 = document.getElementById('card2');
+        const card3 = document.getElementById('card3');
+        
+        const content1 = document.getElementById('content1');
+        const content2 = document.getElementById('content2');
+        const content3 = document.getElementById('content3');
+
+        function createSkeleton() {
+            return `
+                <div class="skeleton-text" style="width: 100%"></div>
+                <div class="skeleton-text" style="width: 90%"></div>
+                <div class="skeleton-text" style="width: 80%"></div>
+            `;
+        }
+
+        btn.addEventListener('click', () => {
+            // UI State change to loading
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            
+            // Reset cards to loading skeleton
+            [card1, card2, card3].forEach(card => card.classList.add('active'));
+            content1.innerHTML = createSkeleton();
+            content2.innerHTML = createSkeleton();
+            content3.innerHTML = createSkeleton();
+
+            // Fake API Delays to make it feel like "agents" are working
+            
+            // Agent 1 finishes
+            setTimeout(() => {
+                content1.innerHTML = `<em>"In the neon-drenched subterranean caves of New Mars, a decommissioned combat android discovers an ancient vinyl record of John Coltrane, sparking a cultural revolution that threatens the ruling Megacorporation."</em>`;
+                card1.style.borderColor = 'var(--accent)';
+            }, 2000);
+
+            // Agent 2 finishes
+            setTimeout(() => {
+                content2.innerHTML = `<p><strong>TITLE:</strong> RED RHYTHM<br><br>Imagine <em>Blade Runner</em> meets <em>La La Land</em>. Our protagonist, UNIT-7 (who renames himself "Duke"), trades his plasma rifle for a saxophone. By establishing an illegal speakeasy, he begins to "infect" other machines with human emotion, drawing the ire of the synthetic overlords who demand absolute conformity.</p>`;
+                card2.style.borderColor = 'var(--accent)';
+            }, 4000);
+
+            // Agent 3 finishes
+            setTimeout(() => {
+                content3.innerHTML = `
+                    <div style="font-family: monospace; background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px;">
+                    INT. SUBTERRANEAN CAVERN - NIGHT<br><br>
+                    Water drips from rusty pipes. Red neon flickers.<br><br>
+                    DUKE (a hulking war-bot with glowing blue eyes) sits on a crate. He holds a tarnished brass SAXOPHONE with surprising delicacy.<br><br>
+                    DUKE<br>
+                    (Mechanical voice glitching into a smooth hum)<br>
+                    "A-one. A-two. A-one, two, three, four..."<br><br>
+                    He blows. The sound echoes. It's rough, metallic, but undeniably soulful.
+                    </div>
+                `;
+                card3.style.borderColor = 'var(--accent)';
+                
+                // Reset button
+                btnText.style.display = 'block';
+                loader.style.display = 'none';
+                btnText.innerText = "REFINE MASTERPIECE";
+            }, 6500);
+
+        });
+    </script>
+</body>
 </html>
