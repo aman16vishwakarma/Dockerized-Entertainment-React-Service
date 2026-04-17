@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # The UI Web Server
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    container_name: nomad_frontend
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - nomad_network
+
+  # The AI Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: nomad_backend
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - API_KEY=your_dummy_api_key_for_now
+    networks:
+      - nomad_network
+
+networks:
+  nomad_network:
+    driver: bridge
